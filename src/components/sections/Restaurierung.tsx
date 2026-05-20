@@ -1,5 +1,5 @@
 import Reveal from "@/components/Reveal";
-import detailImg from "@/assets/restaurierung-detail.jpg";
+import detailImg from "@/assets/restaurierung-detail.png";
 
 const WERTE = [
   { k: "Vor Ort gefertigt", v: "Eigene Werkstatt im Osnabrücker Land — kurze Wege, direkte Absprache." },

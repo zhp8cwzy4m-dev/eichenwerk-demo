@@ -1,5 +1,5 @@
 import Reveal from "@/components/Reveal";
-import portrait from "@/assets/portrait-martin.jpg";
+import portrait from "@/assets/portrait-martin.png";
 
 const Ueber = () => {
   return (
