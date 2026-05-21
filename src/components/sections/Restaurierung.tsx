@@ -22,7 +22,7 @@ const Restaurierung = () => {
                   width={1920}
                   height={1080}
                   loading="lazy"
-                  className="h-full w-full object-cover aspect-[4/3]"
+                  className="h-full w-full object-cover aspect-[4/5]"
                 />
               </div>
             </div>
