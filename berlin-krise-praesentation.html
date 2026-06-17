@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Die Teilung Deutschlands im Kalten Krieg</title>
+<style>
+  :root {
+    --navy: #16243a;
+    --navy-dark: #0d1626;
+    --navy-light: #29405e;
+    --grey: #eef1f5;
+    --grey-mid: #c7ced9;
+    --white: #ffffff;
+    --gold: #c9a227;
+    --red: #8c2f2f;
+    --text-dark: #1c2733;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: var(--navy-dark);
+    color: var(--text-dark);
+    overflow: hidden;
+  }
+
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    background: var(--grey);
+    padding: 0;
+  }
+
+  .slide.active {
+    display: flex;
+  }
+
+  .slide-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 56px 80px 40px;
+    overflow-y: auto;
+  }
+
+  /* ---------- Kicker / header ---------- */
+  .kicker {
+    font-size: 14px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1.slide-title {
+    font-size: 36px;
+    color: var(--navy);
+    margin: 0 0 6px 0;
+    font-weight: 700;
+    border-left: 6px solid var(--gold);
+    padding-left: 18px;
+  }
+
+  .subtitle {
+    font-size: 17px;
+    color: var(--navy-light);
+    margin: 4px 0 28px 24px;
+    font-style: italic;
+  }
+
+  .overview {
+    font-size: 16.5px;
+    line-height: 1.6;
+    color: var(--text-dark);
+    max-width: 980px;
+    margin: 0 0 28px 0;
+    background: var(--white);
+    border-left: 4px solid var(--navy);
+    padding: 18px 24px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  /* ---------- Card grid ---------- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    flex: 1;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 6px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border-top: 4px solid var(--navy);
+  }
+
+  .card h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card h3::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .card ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--text-dark);
+  }
+
+  .card li { margin-bottom: 6px; }
+
+  /* ---------- Title slide ---------- */
+  #slide-1 .slide-inner {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    background: linear-gradient(120deg, var(--navy) 0%, var(--navy) 49.3%, var(--gold) 49.3%, var(--gold) 50.7%, var(--navy-light) 50.7%, var(--navy-light) 100%);
+    color: var(--white);
+    overflow: hidden;
+  }
+
+  #slide-1 .wall-deco {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 2px, transparent 2px, transparent 40px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 60px);
+    pointer-events: none;
+  }
+
+  #slide-1 .eyebrow {
+    font-size: 15px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 22px;
+    z-index: 1;
+  }
+
+  #slide-1 h1 {
+    font-size: 52px;
+    margin: 0 0 18px 0;
+    font-weight: 800;
+    max-width: 900px;
+    z-index: 1;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+  }
+
+  #slide-1 .deck-subtitle {
+    font-size: 20px;
+    color: var(--grey-mid);
+    margin-bottom: 50px;
+    font-style: italic;
+    z-index: 1;
+  }
+
+  #slide-1 .meta {
+    font-size: 14px;
+    color: var(--grey-mid);
+    border-top: 1px solid rgba(255,255,255,0.25);
+    padding-top: 16px;
+    z-index: 1;
+  }
+
+  #slide-1 .stations-preview {
+    display: flex;
+    gap: 14px;
+    margin-top: 10px;
+    z-index: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #slide-1 .stations-preview span {
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ---------- Sources slide ---------- */
+  #slide-7 .source-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 880px;
+  }
+
+  #slide-7 .source-list li {
+    background: var(--white);
+    border-left: 4px solid var(--navy);
+    padding: 14px 20px;
+    margin-bottom: 14px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  #slide-7 .source-list li strong {
+    color: var(--navy);
+  }
+
+  /* ---------- Station number badge ---------- */
+  .station-badge {
+    position: absolute;
+    top: 40px;
+    right: 60px;
+    font-size: 110px;
+    font-weight: 800;
+    color: var(--navy);
+    opacity: 0.07;
+    line-height: 1;
+    user-select: none;
+  }
+
+  /* ---------- Controls ---------- */
+  .controls {
+    position: fixed;
+    bottom: 22px;
+    right: 36px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.92);
+    padding: 8px 16px;
+    border-radius: 30px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+    z-index: 50;
+  }
+
+  .controls button {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: var(--navy);
+    color: var(--white);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+  }
+
+  .controls button:hover { background: var(--navy-light); }
+  .controls button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  #counter {
+    font-size: 13.5px;
+    color: var(--navy);
+    font-weight: 600;
+    min-width: 42px;
+    text-align: center;
+  }
+
+  .dots {
+    position: fixed;
+    bottom: 22px;
+    left: 36px;
+    display: flex;
+    gap: 8px;
+    z-index: 50;
+  }
+
+  .dots button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(22,36,58,0.25);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .dots button.active {
+    background: var(--navy);
+    width: 26px;
+    border-radius: 6px;
+  }
+
+  @media (max-width: 900px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .slide-inner { padding: 36px 28px 30px; }
+    #slide-1 h1 { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- 1. TITEL -->
+  <section class="slide active" id="slide-1">
+    <div class="slide-inner">
+      <div class="wall-deco"></div>
+      <div class="eyebrow">Geschichte &middot; Kalter Krieg</div>
+      <h1>Die Teilung Deutschlands im Kalten Krieg</h1>
+      <div class="deck-subtitle">Schlüsselstationen am Beispiel der Berlin-Krise</div>
+      <div class="stations-preview">
+        <span>1 Berlin-Krise</span>
+        <span>2 SED-Gründung</span>
+        <span>3 Marshall-Plan</span>
+        <span>4 Währungsreform</span>
+        <span>5 Gründung der beiden Staaten</span>
+      </div>
+      <div class="meta">Referat Geschichte &nbsp;|&nbsp; Name, Kurs &nbsp;|&nbsp; Datum</div>
+    </div>
+  </section>
+
+  <!-- 2. SCHLÜSSELSTATION 1 – BERLIN-KRISE -->
+  <section class="slide" id="slide-2">
+    <div class="slide-inner">
+      <div class="station-badge">01</div>
+      <div class="kicker">1. Schlüsselstation</div>
+      <h1 class="slide-title">Die Berlin-Krise</h1>
+      <p class="subtitle">Was war die Berlin-Krise?</p>
+      <p class="overview">
+        Die Berlin-Krise war ein zentraler Konflikt des Kalten Krieges, bei dem die Sowjetunion im Juni 1948
+        alle Land- und Wasserwege nach West-Berlin sperrte, um die Westmächte aus der Stadt zu drängen.
+        Die Westalliierten antworteten mit einer historischen Luftbrücke und bewiesen damit ihre
+        Entschlossenheit, West-Berlin zu halten. Die Krise verdeutlichte die tiefe Spaltung zwischen Ost
+        und West und gilt als ein erster großer Machtkampf des Kalten Krieges.
+      </p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Ursache</h3>
+          <ul>
+            <li>Berlin lag mitten in der sowjetischen Besatzungszone – die Westmächte konnten die Stadt nur über Korridore erreichen</li>
+            <li>Die Einführung der Westmark war für die Sowjetunion eine Provokation</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Die Blockade</h3>
+          <ul>
+            <li>Ab Juni 1948 sperrte die Sowjetunion alle Land- und Wasserwege nach West-Berlin</li>
+            <li>Menschen konnten nicht reisen, Waren nicht geliefert werden</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Die Luftbrücke</h3>
+          <ul>
+            <li>Die USA und Großbritannien richteten eine Luftbrücke ein</li>
+            <li>11 Monate lang versorgten sogenannte „Rosinenbomber" die Stadt aus der Luft mit Lebensmitteln und Gütern</li>
+            <li>Erst im Mai 1949 gab die Sowjetunion die Blockade auf</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Ende des Alliierten Kontrollrats</h3>
+          <ul>
+            <li>Unter dem Druck der Krise verließen die Sowjets den Alliierten Kontrollrat</li>
+            <li>Damit war eine gemeinsame Verwaltung ganz Deutschlands endgültig gescheitert</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. SCHLÜSSELSTATION 2 – SED-GRÜNDUNG -->
+  <section class="slide" id="slide-3">
+    <div class="slide-inner">
+      <div class="station-badge">02</div>
+      <div class="kicker">2. Schlüsselstation</div>
+      <h1 class="slide-title">Die Gründung der SED</h1>
+      <p class="overview">
+        Die Sozialistische Einheitspartei Deutschlands (SED) entstand im April 1946 aus dem Zusammenschluss
+        von KPD und SPD in der sowjetischen Besatzungszone. Die Vereinigung erfolgte unter starkem Druck der
+        sowjetischen Besatzungsmacht und wird daher oft als „Zwangsvereinigung" bezeichnet. Die SED wurde zur
+        dominierenden Partei in der SBZ und später in der DDR.
+      </p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Ausgangslage</h3>
+          <ul>
+            <li>Nach 1945 Zulassung mehrerer Parteien in der SBZ: KPD, SPD, CDU, LDPD</li>
+            <li>Sowjetische Besatzungsmacht (SMAD) fördert gezielt eine kommunistisch geprägte Einheitspartei</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Die Zwangsvereinigung</h3>
+          <ul>
+            <li>Im April 1946 Zusammenschluss von KPD und SPD zur SED unter sowjetischem Druck</li>
+            <li>Viele Sozialdemokraten lehnten die Vereinigung ab, hatten aber kaum eine Wahl</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Führung</h3>
+          <ul>
+            <li>Wilhelm Pieck (KPD) und Otto Grotewohl (SPD) als formal gleichberechtigte Vorsitzende</li>
+            <li>Walter Ulbricht gewinnt zunehmend Einfluss und Macht innerhalb der Partei</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Folgen</h3>
+          <ul>
+            <li>Entstehung einer sowjetisch geprägten Einheitspartei als zentrales Machtinstrument</li>
+            <li>Grundstein für das spätere Einparteiensystem der DDR</li>
+            <li>Weitere politische Polarisierung zwischen Ost und West</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. SCHLÜSSELSTATION 3 – MARSHALL-PLAN -->
+  <section class="slide" id="slide-4">
+    <div class="slide-inner">
+      <div class="station-badge">03</div>
+      <div class="kicker">3. Schlüsselstation</div>
+      <h1 class="slide-title">Der Marshall-Plan</h1>
+      <p class="overview">
+        Der Marshall-Plan war ein US-amerikanisches Wirtschaftshilfeprogramm, das 1947 von Außenminister
+        George Marshall vorgeschlagen wurde, um den wirtschaftlichen Wiederaufbau Europas nach dem Zweiten
+        Weltkrieg zu fördern und die Verbreitung des Kommunismus einzudämmen.
+      </p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Ziele</h3>
+          <ul>
+            <li>Wiederaufbau der europäischen Wirtschaft nach dem Krieg</li>
+            <li>Stabilisierung demokratischer Strukturen in Westeuropa</li>
+            <li>Eindämmung des Kommunismus ("Containment"-Politik der USA)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Umfang</h3>
+          <ul>
+            <li>Rund 13 Milliarden US-Dollar Wirtschaftshilfe zwischen 1948 und 1952</li>
+            <li>Empfänger: 16 westeuropäische Staaten, darunter die Westzonen Deutschlands</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Reaktion der Sowjetunion</h3>
+          <ul>
+            <li>Ablehnung des Plans für sich selbst und die osteuropäischen Staaten</li>
+            <li>Verbot der Teilnahme auch für die sowjetische Besatzungszone</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Folgen</h3>
+          <ul>
+            <li>Wirtschaftlicher Aufschwung im Westen als Grundlage des späteren „Wirtschaftswunders"</li>
+            <li>Vertiefte wirtschaftliche und politische Spaltung zwischen West und Ost</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. SCHLÜSSELSTATION 4 – WÄHRUNGSREFORM -->
+  <section class="slide" id="slide-5">
+    <div class="slide-inner">
+      <div class="station-badge">04</div>
+      <div class="kicker">4. Schlüsselstation</div>
+      <h1 class="slide-title">Die Währungsreform</h1>
+      <p class="overview">
+        Am 20./21. Juni 1948 führten die Westalliierten in den Westzonen die Deutsche Mark ein und lösten
+        damit die alte Reichsmark ab. Die Währungsreform sollte die Wirtschaft stabilisieren – sie hatte
+        jedoch zugleich erhebliche politische Sprengkraft und war der direkte Auslöser der Berlin-Krise.
+      </p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Wann und wo?</h3>
+          <ul>
+            <li>Am 21. Juni 1948 in den westlichen Besatzungszonen (dem späteren Westdeutschland)</li>
+            <li>Die Deutsche Mark (DM) ersetzte die alte Reichsmark</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Unmittelbare Folge</h3>
+          <ul>
+            <li>Geschäfte füllten sich schnell wieder mit Waren</li>
+            <li>Der Schwarzmarkt verlor schlagartig seine Bedeutung</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Politische Auswirkung</h3>
+          <ul>
+            <li>Westmächte trieben damit indirekt die Gründung eines eigenen westdeutschen Staates voran – ohne die sowjetische Zone</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Reaktion der Sowjetunion</h3>
+          <ul>
+            <li>Gegenreform: Die Sowjetunion zog nach und führte eine eigene Währungsreform in ihrer Zone (SBZ) ein</li>
+            <li>Ab dem 24. Juni 1948 blockierte die Sowjetunion als Reaktion alle Zufahrtswege nach West-Berlin – Beginn der Berlin-Blockade</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. SCHLÜSSELSITUATION 5 – GRÜNDUNG DER BEIDEN DEUTSCHEN STAATEN -->
+  <section class="slide" id="slide-6">
+    <div class="slide-inner">
+      <div class="station-badge">05</div>
+      <div class="kicker">5. Schlüsselsituation</div>
+      <h1 class="slide-title">Die Gründung der beiden deutschen Staaten</h1>
+      <p class="overview">
+        1949 endete der Weg der deutschen Teilung formal mit der Gründung zweier deutscher Staaten: der
+        Bundesrepublik Deutschland im Westen und der Deutschen Demokratischen Republik im Osten. Aus der
+        provisorischen Besatzungsordnung wurden zwei souveräne, ideologisch gegensätzliche Staaten.
+      </p>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Parlamentarischer Rat</h3>
+          <ul>
+            <li>1948/49 in Bonn unter dem Vorsitz von Konrad Adenauer</li>
+            <li>Ausarbeitung des Grundgesetzes für die Westzonen</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Gründung der BRD</h3>
+          <ul>
+            <li>Verkündung des Grundgesetzes am 23. Mai 1949</li>
+            <li>Demokratisch-föderale Verfassung nach westlichem Vorbild</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Gründung der DDR</h3>
+          <ul>
+            <li>Gründung am 7. Oktober 1949 nach sowjetischem Vorbild</li>
+            <li>Zentralistisch organisiert, SED als führende Staatspartei</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Folgen</h3>
+          <ul>
+            <li>Die deutsche Teilung ist staatlich vollzogen – zwei deutsche Staaten mit gegensätzlichen Gesellschaftssystemen</li>
+            <li>Beginn von über 40 Jahren getrennter deutscher Geschichte</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. QUELLEN -->
+  <section class="slide" id="slide-7">
+    <div class="slide-inner">
+      <div class="kicker">Abschluss</div>
+      <h1 class="slide-title">Quellen</h1>
+      <ul class="source-list">
+        <li><strong>Geschichtsschulbuch</strong> – Kapitel „Die Teilung: Deutschland im Sog der Weltpolitik", Schlüsselstationen 1–5 (Gründung der SED, Marshall-Plan, Währungsreform, Berlin-Krise, Gründung der beiden deutschen Staaten)</li>
+        <li><strong>Eigene Unterrichts- und Lernnotizen</strong> – u.a. zur Besatzungspolitik 1945–1948 und zur Währungsreform</li>
+        <li><strong>Ergänzendes historisches Fachwissen</strong> – allgemein zugängliche Inhalte zum Kalten Krieg und zur deutschen Teilungsgeschichte</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="controls">
+  <button id="prevBtn" aria-label="Vorherige Folie">‹</button>
+  <span id="counter">1 / 7</span>
+  <button id="nextBtn" aria-label="Nächste Folie">›</button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+
+  const counterEl = document.getElementById('counter');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const dotsContainer = document.getElementById('dots');
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    counterEl.textContent = `${current + 1} / ${total}`;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    Array.from(dotsContainer.children).forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function goTo(index) {
+    current = Math.max(0, Math.min(total - 1, index));
+    render();
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') goTo(current + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') goTo(current - 1);
+    if (e.key === 'Home') goTo(0);
+    if (e.key === 'End') goTo(total - 1);
+  });
+
+  render();
+</script>
+
+</body>
+</html>
